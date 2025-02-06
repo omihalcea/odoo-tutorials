@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Acció per obrir les propietats -->
+    <record id="estate_property_action" model="ir.actions.act_window">
+        <field name="name">Propietats</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menú per accedir a Propietats -->
+    <menuitem id="estate_menu_root" name="Immobiliària"/>
+    
+    <!-- Vista en formulari modificada -->
+    <record id="estate_property_form_view" model="ir.ui.view">
+        <field name="name">estate.property.form.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <form string="Propietat Immobiliària">
+                <sheet>
+                    <!-- Secció principal: els camps que es volen destacar -->
+                    <group colspan="4">
+                        <!-- Nom sense etiqueta, amb format destacat i a la seva pròpia línia -->
+                        <field name="name" nolabel="1" class="oe_title"/>
+                    </group>
+                    <group>
+                        <field name="postalcode"/>
+                        <field name="date_availability"/>
+                        <field name="expected_price"/>
+                    </group>
+                    <group>
+                        <field name="best_offer" readonly="1"/>
+                        <field name="state"/>
+                        <field name="property_type_id" options="{'no_create': True}"/>
+                    </group>
+
+                    <notebook>
+                        <!-- Pestanya "Descripció": es mostren la resta d’atributs -->
+                        <page string="Descripció">
+                            <group>
+                                <field name="description"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <field name="surface"/>
+                            </group>
+                            <group>
+                                <field name="salesman_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                            <group>
+                                <field name="selling_price" readonly="1"/>
+                                <field name="price_per_m2" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="bedroom"/>
+                                <field name="bathroom"/>
+                                <field name="year_built"/>
+                                <field name="energy_certificate"/>
+                            </group>
+                            <group>
+                                <field name="elevator"/>
+                                <field name="parking"/>
+                                <field name="renovated"/>
+                            </group>
+                        </page>
+
+                        <!-- Pestanya "Ofertes": llista d’ofertes editable -->
+                        <page string="Ofertes">
+                            <field name="offer_ids">
+                                <list>
+                                    <field name="price"/>
+                                    <field name="status"/>
+                                    <field name="partner_id"/>
+                                    <field name="comment"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="estate_property_offer_form" model="ir.ui.view">
+        <field name="name">estate.property.offer.form</field>
+        <field name="model">estate.property.offer</field>
+        <field name="arch" type="xml">
+            <form string="Oferta">
+                <sheet>
+                    <group>
+                        <field name="price"/>
+                        <field name="status" widget="radio"/>
+                        <field name="partner_id"/>
+                        <field name="comment"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

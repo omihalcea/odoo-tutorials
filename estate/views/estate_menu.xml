@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Acció per als anuncis (propietats) -->
+    <record id="estate_property_action" model="ir.actions.act_window">
+        <field name="name">Anuncis</field>
+        <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Acció per a les etiquetes -->
+    <record id="estate_property_tag_action" model="ir.actions.act_window">
+        <field name="name">Etiquetes</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Acció per als tipus -->
+    <record id="estate_property_type_action" model="ir.actions.act_window">
+        <field name="name">Tipus</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Vista en llista per a les propietats -->
+    <record id="estate_property_list_view" model="ir.ui.view">
+        <field name="name">estate.property.list.view</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" width="200"/>
+                <field name="property_type_id" width="100"/>
+                <field name="postalcode" width="100"/>
+                <field name="date_availability" width="100"/>
+                <field name="expected_price" width="120"/>
+                <field name="salesman_id" width="150"/>
+                <field name="state" width="100"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista de cerca per a les propietats -->
+    <record id="estate_property_search_view" model="ir.ui.view">
+        <field name="name">estate.property.search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search string="Cerca Propietats">
+                <field name="name" string="Nom"/>
+                <field name="property_type_id" string="Tipus"/>
+                <field name="postalcode" string="Codi Postal"/>
+                <field name="expected_price" string="Preu de Venda Esperat"/>
+                <field name="state" string="Estat"/>
+                <field name="date_availability" string="Data de Disponibilitat"/>
+                <!-- Filtres predefinits -->
+                <filter string="Disponibles" 
+                        name="filter_available"
+                        domain="[('state', 'in', ['new', 'offer_received'])]" 
+                        help="Mostra propietats en estat Nova o Oferta Rebuda"/>
+                <filter string="Baix preu" 
+                        name="filter_low_price"
+                        domain="[('expected_price', '&lt;', 100000)]" 
+                        help="Mostra propietats amb preu de venda esperat inferior a 100.000 €"/>
+                                        <!-- Agrupació per Tipus -->
+                <group expand="0" string="Agrupacions">
+                    <filter string="Tipus" name="group_by_type" domain="[]" context="{'group_by': 'property_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="estate_menu_root" name="Propietat Immobiliària">
+        <!-- Menú Anuncis (obre la vista de propietats) -->
+        <menuitem id="estate_menu_announcements" name="Anuncis" action="estate_property_action"/>
+
+        <!-- Menú Configuració -->
+        <menuitem id="estate_menu_configuration" name="Configuració">
+            <!-- Submenú Etiquetes dins de Configuració -->
+            <menuitem id="estate_menu_tags" name="Etiquetes" action="estate_property_tag_action"/>
+            
+            <!-- Submenú Tipus dins de Configuració -->
+            <menuitem id="estate_menu_types" name="Tipus" action="estate_property_type_action"/>
+        </menuitem>
+    </menuitem>
+
+</odoo>
