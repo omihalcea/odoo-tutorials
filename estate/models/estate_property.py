@@ -21,17 +21,18 @@ class EstateProperty(models.Model):
     )
 
     # e. Preu de venda esperat
-    expected_price = fields.Float('Preu de Venda Esperat', required=True)
+    expected_price = fields.Monetary('Preu de Venda Esperat')
+    currency_id = fields.Many2one('res.currency', string='Moneda', default=lambda self: self.env.company.currency_id)
 
     # f. Preu de venda final
-    selling_price = fields.Float('Preu de Venda Final', readonly=True, copy=False)
+    selling_price = fields.Monetary('Preu de Venda Final', readonly=True, copy=False)
 
     # g. Millor oferta
-    best_offer = fields.Float(
+    best_offer = fields.Monetary(
         'Millor Oferta',
         compute='_compute_best_offer',
         readonly=True,
-        store=True
+        store=False
     )
 
     # h. Estat
@@ -76,7 +77,7 @@ class EstateProperty(models.Model):
     surface = fields.Float('Superfície (m2)', required=True)
 
     # q. Preu per m2
-    price_per_m2 = fields.Float(
+    price_per_m2 = fields.Monetary(
         'Preu per m2',
         compute='_compute_price_per_m2',
         readonly=True,
@@ -99,7 +100,6 @@ class EstateProperty(models.Model):
 
     # t. Actiu
     active = fields.Boolean('Actiu', default=True)
-
 
     # u. Llistat d'ofertes
     offer_ids = fields.One2many(
@@ -132,7 +132,7 @@ class EstateProperty(models.Model):
             accepted_offer = record.offer_ids.filtered(lambda o: o.status == 'accepted')
             record.buyer_id = accepted_offer.partner_id if accepted_offer else False
 
-    # f. Preu de venda final
+    # q. Preu per m2
     @api.depends('expected_price', 'surface')
     def _compute_price_per_m2(self):
         """ Calcula el preu per metre quadrat """
